@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Snaliens Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+    }
+    h1 {
+      text-align: center;
+      margin: 1rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 2px;
+      padding: 2px;
+    }
+    .gallery img {
+      width: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>NFT Collection</h1>
+  <div class="gallery" id="gallery"></div>
+  <div id="sentinel" style="height: 1px;"></div>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const sentinel = document.getElementById('sentinel');
+    const baseURL = 'https://raw.githubusercontent.com/y0uyo/TheSnaliens/main/compressed/';
+    const total = 10000;
+    const batchSize = 200; // Increased batch size for smoother loading
+    let loaded = 0;
+    let loading = false;
+
+    const loadBatch = () => {
+      if (loading || loaded >= total) return;
+      loading = true;
+
+      const fragment = document.createDocumentFragment();
+      for (let i = loaded + 1; i <= Math.min(loaded + batchSize, total); i++) {
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.src = `${baseURL}${i}.webp`;
+        img.alt = `NFT ${i}`;
+        fragment.appendChild(img);
+      }
+      gallery.appendChild(fragment);
+      loaded += batchSize;
+      loading = false;
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadBatch();
+        }
+      });
+    }, {
+      rootMargin: '800px' // Trigger earlier
+    });
+
+    observer.observe(sentinel);
+    loadBatch();
+  </script>
+</body>
+</html>
