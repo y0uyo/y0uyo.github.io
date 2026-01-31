@@ -444,10 +444,30 @@
       const mediaContainer = document.getElementById('detail-media');
       mediaContainer.innerHTML = '';
       p.media.forEach(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        mediaContainer.appendChild(img);
-      });
+  let element;
+
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    // Extrahiere die Video-ID
+    const videoId = url.includes("youtu.be")
+      ? url.split("/").pop()
+      : new URL(url).searchParams.get("v");
+
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+
+    element = document.createElement("iframe");
+    element.src = embedUrl;
+    element.width = "100%";
+    element.height = "200";
+    element.frameBorder = "0";
+    element.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    element.allowFullscreen = true;
+  } else {
+    element = document.createElement("img");
+    element.src = url;
+  }
+
+  mediaContainer.appendChild(element);
+});
     }
 
     function goBack() {
