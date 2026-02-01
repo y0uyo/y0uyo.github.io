@@ -5,27 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Project Archive</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: sans-serif;
-      background-color: #f5f5f5;
-    }
-    header {
-      padding: 1rem;
-      background: #111;
-      color: white;
-      text-align: center;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background-color: #f5f5f5; }
+    header { padding: 1rem; background: #111; color: white; text-align: center; }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
       padding: 1rem;
     }
+
     .banner {
       position: relative;
       overflow: hidden;
@@ -37,9 +27,7 @@
       transition: transform 0.2s;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .banner:hover {
-      transform: scale(1.03);
-    }
+    .banner:hover { transform: scale(1.03); }
     .banner::before {
       content: "";
       position: absolute;
@@ -48,9 +36,8 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    .banner:hover::before {
-      opacity: 1;
-    }
+    .banner:hover::before { opacity: 1; }
+
     .banner-title {
       position: absolute;
       top: 50%;
@@ -64,93 +51,259 @@
       transition: opacity 0.3s;
       z-index: 1;
       padding: 0.5rem 1rem;
+      width: 90%;
+      line-height: 1.1;
+      background: none;
     }
-    .banner:hover .banner-title {
-      opacity: 1;
-    }
+    .banner:hover .banner-title { opacity: 1; }
+
     .detail-view {
       display: none;
       flex-direction: column;
       padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .detail-header {
-      display: flex;
-      gap: 1rem;
-      flex-direction: column;
-    }
-    .detail-image {
-      max-width: 100%;
-      border-radius: 8px;
-    }
+
     .back-btn {
       margin-bottom: 1rem;
       background: none;
       border: none;
-      color: blue;
+      color: #111;
       cursor: pointer;
       font-size: 1rem;
       text-align: left;
+      font-weight: 700;
     }
-    .media {
-      margin-top: 2rem;
-    }
-    .media h2 {
-      margin-bottom: 1rem;
-    }
-    .media-grid {
+
+    .detail-header {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: 1fr;
       gap: 1rem;
+      align-items: start;
     }
-    .media-grid img {
+
+    .detail-banner-wrap {
       width: 100%;
-      height: auto;
-      border-radius: 8px;
+      max-width: 420px;
     }
-    @media (min-width: 768px) {
-      .detail-header {
-        flex-direction: row;
-      }
-      .detail-content {
-        margin-left: 2rem;
-        flex: 1;
-      }
+
+    .detail-image {
+      width: 100%;
+      height: 240px;
+      border-radius: 10px;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      background: #ddd;
+    }
+
+    .detail-content h2 { margin-bottom: 0.25rem; }
+    .detail-year { opacity: 0.7; margin-bottom: 0.75rem; }
+
+    .detail-desc {
+      margin-top: 0.25rem;
+      background: white;
+      border-radius: 10px;
+      padding: 0.75rem;
+      line-height: 1.35;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      max-height: 240px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    #detail-links {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     #detail-links a {
       text-decoration: none;
-      color: black;
-      font-weight: bold;
-      margin-top: 0.5rem;
+      color: #111;
+      font-weight: 700;
+      background: white;
+      border-radius: 999px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    #detail-links a:hover { transform: translateY(-1px); }
+
+    /* MEDIA */
+    :root {
+      --media-row-height: 180px;
+      --media-gap: 14px;
+      --media-radius: 12px;
+    }
+
+    .media { margin-top: 1.5rem; }
+    .media h2 { margin-bottom: 0.75rem; }
+
+    .media-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--media-gap);
+      align-items: flex-start;
+    }
+
+    .media-tile {
+      height: var(--media-row-height);
+      flex: 0 0 auto;
+      position: relative;
+      overflow: hidden;
+
+      border-radius: var(--media-radius); /* <- neu */
+      cursor: pointer;                    /* <- kein zoom cursor, aber klickbar */
+    }
+
+    .media-tile img {
+      height: 100%;
+      width: 100%;
+      display: block;
+      object-fit: cover; /* keine schwarzen Balken */
+      cursor: pointer;
+    }
+
+    .yt-thumb { cursor: pointer; }
+
+    .yt-play {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+    .yt-play::before {
+      content: "";
+      width: 54px;
+      height: 38px;
+      background: rgba(0,0,0,0.55);
+      border-radius: 10px;
+    }
+    .yt-play::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 14px solid white;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      transform: translateX(2px);
+    }
+
+    .media-tile iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
       display: block;
     }
 
-  #detail-links a:hover {
-    text-decoration: underline;
+    @media (min-width: 900px) {
+      .detail-header { grid-template-columns: 420px 1fr; }
     }
 
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: min(1100px, 96vw);
+      max-height: 86vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 86vh;
+      border-radius: 12px;
+      display: block;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      background: #111;
+    }
+
+    .lb-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 22px;
+      display: grid;
+      place-items: center;
+      user-select: none;
+    }
+    .lb-btn:hover { background: rgba(255,255,255,0.20); }
+
+    .lb-prev { left: -56px; }
+    .lb-next { right: -56px; }
+
+    .lb-close {
+      position: absolute;
+      top: -56px;
+      right: 0;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 20px;
+      display: grid;
+      place-items: center;
+    }
+    .lb-close:hover { background: rgba(255,255,255,0.20); }
+
+    @media (max-width: 700px) {
+      .lb-prev { left: 8px; }
+      .lb-next { right: 8px; }
+      .lb-close { top: 8px; right: 8px; }
+    }
   </style>
 </head>
+
 <body>
   <header>
     <h1>We can make our plans, but the LORD determines our steps. Proverbs 16:9</h1>
   </header>
 
   <main id="main-content">
-    <div class="grid" id="project-list">
-      <!-- Add projects here -->
-    </div>
+    <div class="grid" id="project-list"></div>
 
     <div class="detail-view" id="project-detail">
       <button class="back-btn" onclick="goBack()">← Back</button>
+
       <div class="detail-header">
-        <img id="detail-img" class="detail-image" src="" alt="Project Banner">
+        <div class="detail-banner-wrap">
+          <img id="detail-img" class="detail-image" src="" alt="Project Banner">
+        </div>
+
         <div class="detail-content">
           <h2 id="detail-title"></h2>
-          <p id="detail-year"></p>
-          <p id="detail-desc"></p>
+          <div id="detail-year" class="detail-year"></div>
+          <div id="detail-desc" class="detail-desc"></div>
           <div id="detail-links"></div>
         </div>
       </div>
+
       <div class="media">
         <h2>MEDIA</h2>
         <div class="media-grid" id="detail-media"></div>
@@ -158,254 +311,32 @@
     </div>
   </main>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner" id="lightboxInner">
+      <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+      <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+      <img id="lbImage" alt="Preview" />
+      <button class="lb-btn lb-next" id="lbNext" aria-label="Next">›</button>
+    </div>
+  </div>
+
+  <script src="projects.js"></script>
   <script>
-    const projects = [
-      {
-        title: "YOU Run",
-        year: "2019",
-        description: "An endless runner game. Started development at age 14 and released it on the Google Play store in 2020 when I was 15, still working on it sometimes when I feel like it. I still think it has potential. TO BE ADDED: ALL RECORDED DEV HISTORY, MAYBE DOWNLOADS OF OLD VERSIONS. THE TODO LISTS. DURING THE DEVELOPMENT THERE WERE MANY THINGS TESTED. THE FIRST IDEA WAS TO CREATE AN ARCADE, WHERE YOU CAN MOVE FREELY AND ENTER MINI GAMES LIKE THE CURRENT 'YOU RUN' BY GOING TO THE ARCADE MASHINES AND PRESSING ENTER (SEE FIRST VERSION). AFTER THIS IDEA WAS SCRAPPED, THE FOCUS WAS ON CREATING AN ENDLESS RUNNER THAT HAS A STORY. SO CUTSCENES, FIGHTS, ENEMIES, CHARACTER ETC. TWO MONSTERS WERE CREATED IN EARLY VERSIONS AND A MECHANIC FOR USING A LASER GUN WAS HALF IMPLEMENTED. LATER THAT IDEA WAS SCRAPPED DUE IT TAKING TO MUCH TIME. SO AT THE END THE FOCUS WAS ON CREATING A WORKING AND FUN ENDLESS RUNNER GAME. NEARLY ALL 3D OBJECTS, CHARACTERS, SOUNDS, MUSIC WAS CREATED FROM SCRATCH BY 14-15 YEAR OLD ME. THE INITIAL GRAPHICS WERE BRIGHT, SOFT AND BUBBLY, DUE WANTING TO EXPORT IT FOR MOBILE, THE QUALITY OF THE 3D MODELS HAD TO BE DRASTICLY LOWERED, WHICH YOU CAN SEE IN THE LATER VERSIONS. DURING THE DEVELOPMENT I LEARNED TO CODE, 3D MODEL AND LEARNED SO MANY DIFFERENT TOOLS. IN RETROSPECT I AM IMPRESSED WHAT I HAVE CREATED AND STARTED AS A 14 YEAR OLD. ALTHOUGH I DID NOT GET ANY RECOGNITION FOR MY WORK, I RECOGNISE MYSELF NOW AND WHAT I HAVE CREATED. IT MIGHT BE CONSIDERED AS A 'FAILED', DUE TO LOW DOWNLAODS, NO ACTIVE PLAYERS BUT I SEE IT AS A WIN BECAUSE I HAVE LEARNED SO MUCH. ALONG THE WAY THERE WERE A FEW SUPPORTIVE FRIENDS WHO PLAYED THE GAME AND REACHED THE TOPS OF THE LEADERBOARD, WHICH I AM GRATEFUL FOR, SOME SHARED AND I THANK THEM FOR THEIR SUPPORT, THEY KNOW WHO THEY ARE. TO BE HONEST THE EFFORTS OF CREATING THE GAME WAS FAR GREATER THAN AQUIRING USERS AND MAKING PEOPLE ACTUALLY DOWNLOAD AND PLAY THE GAME. SOMEDAY THERE WILL BE EFFORTS AGAIN TO REVIVE THIS GAME AND MAKE IT PLAYED BY PEOPLE. THE GAME WAS AND IS STILL BUGGY, SHOUT OUT TO THOSE WHO POINTED BUGS OUT TO ME AND RECOMMENDED ME IDEAS. MOST OF THE PEOPLE SAID, THERE WAS SOMETHING MISSING IN THE GAME THAT WOULD MAKE IT MORE FUN, BUT NO ONE FIGURED OUT WHAT IT WAS, SO IF YOU KNOW, CONTACT ME. ",
-        banner: "./Media/yr/banner4.png",
-        links: [
-          { label: "App Store", url: "https://apps.apple.com/ch/app/you-run-404/id6745303381?l=en-GB" },
-          { label: "Google Play Store v1", url: "https://play.google.com/store/apps/details?id=com.YoussefIbrahim.DashRush" },
-          { label: "Google Play Store v2", url: "https://play.google.com/store/apps/details?id=com.yi.YOURun404" },
-          { label: "Amazon Store", url: "https://www.amazon.de/YOUssef-YOU-Run/dp/B0BWCG4Z11" },
-          { label: "itch.io", url: "https://yyyi.itch.io/yourun404" },
-          { label: "YouTube", url: "https://www.youtube.com/@YOURun404" },
-          { label: "TikTok", url: "https://www.tiktok.com/@yourun404" },
-          { label: "FaceBook", url: "https://www.facebook.com/Y0URun" }
-
-        ],
-        media: [
-          "https://raw.githubusercontent.com/y0uyo/YOURun/main/Media/YOU Run Running Game.jpg",
-          "https://raw.githubusercontent.com/y0uyo/YOURun/main/Media/old_YOURun_Icon_512px.png",
-          "https://raw.githubusercontent.com/y0uyo/YOURun/main/Media/banner1.webp",
-          "https://youtu.be/L-iRTHisp10",
-          "https://youtu.be/ndYvDv4_0oM",
-          "https://youtu.be/NIuoOfR0gv4",
-          "https://raw.githubusercontent.com/y0uyo/YOURun/main/Media/512x512.png",
-          "https://www.youtube.com/watch?v=1_9u4jxZ6CE",
-          "https://www.youtube.com/watch?v=tJzPpncPvxQ&t"
-        ]
-      },
-
-      {
-        title: "The Snaliens",
-        year: "2022",
-        description: "A collection of 10'000 snaliens. An NFT Collection on the Ethereum blockchain.",
-        banner: "./Media/ts/banner3.png",
-        links: [
-          { label: "View Gallery", url: "snaliens-gallery.html"},
-          { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-          { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-          { label: "X.com", url: "https://x.com/TheSnaliens"},
-          { label: "Website (archive)", url: ""},
-          { label: "definition of a snalien (article)", url: "https://paragraph.com/@the-snaliens/definition-of-a-snalien"},
-        ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "ardge wear",
-        year: "2022",
-        description: "started a streetwear brand with my friend fahham. created a few samples, did photoshoots, started marketing, but never dropped. too much planning and no execution.",
-        banner: "./Media/aw/trucker_carrousel.gif",
-        links: [
-          { label: "Instagram", url: "https://www.instagram.com/ardgewear/"},
-          { label: "TikTok", url: "https://www.tiktok.com/@ardgewear"},
-          { label: "Pinterest", url: "https://pinterest.com/ardgewear/"},
-        ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "idolica",
-        year: "aug 2022 - july 2023",
-        description: "An E-commerce Store selling self cleaning hairbrushes",
-        banner: "./Media/others/idolica.png",
-       // links: [
-       //   { label: "View Gallery", url: "snaliens-gallery.html"},
-       //   { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-       //   { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-       //   { label: "X.com", url: "https://x.com/TheSnaliens"},
-       //   { label: "Website (archive)", url: ""}
-       // ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "LoopyBrush",
-        year: "jan 2024 - feb 2025",
-        description: "An E-commerce Store selling self cleaning hairbrushes.",
-        banner: "./Media/others/loopybrush.png",
-      //  links: [
-      //    { label: "View Gallery", url: "snaliens-gallery.html"},
-      //    { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-      //    { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-      //    { label: "X.com", url: "https://x.com/TheSnaliens"},
-      //    { label: "Website (archive)", url: ""}
-      //  ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "DopamineBay",
-        year: "2024",
-        description: "An E-commerce Store case study for a final school project. No revenue generated due to tight deadlines, there was no time for testing. Total loss about -150 USD. Grade 6/6. The last ecom business, where I didn't have quality control over my products. Decided afterwards to pursue ventures, where I can stand behind what I sell or create and have total control over the quality, despite less rapid success and profit.",
-        banner: "./Media/others/dopaminebay.png",
-    //    links: [
-    //      { label: "View Gallery", url: "snaliens-gallery.html"},
-    //      { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-    //      { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-    //      { label: "X.com", url: "https://x.com/TheSnaliens"},
-    //      { label: "Website (archive)", url: ""}
-    //    ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "GRAPHIC DESIGN",
-        year: "all my life",
-        description: "started creating designs, 3d characters and logos for gamers in photoshop and cinema4d (2015). Then started selling logos on fiverr (2018). Later designed various flyers, other print media and websites for Restaurants.",
-        banner: "./Media/others/graphicdesign.png",
-        //links: [
-        //  { label: "View Gallery", url: "snaliens-gallery.html"},
-        //],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-      {
-        title: "BALANCE ROBOT",
-        year: "2021",
-        description: "Self Balancing Robot created for a school project.",
-        banner: "./Media/others/balance.png",
-        links: [
-          { label: "video", url: "https://youtu.be/jHVGEODFmCk"},
-        ],
-        media: [
-          "https://youtu.be/jHVGEODFmCk"
-        ]
-      },
-
-      {
-        title: "ART",
-        year: "all my life",
-        description: "Drawings, Scupltures",
-        banner: "./Media/art/moving_head.gif",
-        // links: [
-        //   { label: "View Gallery", url: "snaliens-gallery.html"},
-        //   { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-        //   { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-        //   { label: "X.com", url: "https://x.com/TheSnaliens"},
-        //   { label: "Website (archive)", url: ""}
-        // ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-      {
-        title: "9-5 PROJECTS",
-        year: "2021 - 2026",
-        description: "Projects I did during my apprentice ship at work or in school.",
-        banner: "./Media/9-5/9-5.png",
-        // links: [
-        //   { label: "View Gallery", url: "snaliens-gallery.html"},
-        //   { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-        //   { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-        //   { label: "X.com", url: "https://x.com/TheSnaliens"},
-        //   { label: "Website (archive)", url: ""}
-        // ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-      {
-        title: "RANDOM",
-        year: "2018 - 2020",
-        description: "Experimentations I created as a child",
-        banner: "./Media/others/random.png",
-        // links: [
-        //   { label: "View Gallery", url: "snaliens-gallery.html"},
-        //   { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-        //   { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-        //   { label: "X.com", url: "https://x.com/TheSnaliens"},
-        //   { label: "Website (archive)", url: ""}
-        // ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-      {
-        title: "CAR REPAIR",
-        year: "ongoing",
-        description: "fixing my car",
-        banner: "./Media/others/car.gif",
-        // links: [
-        //   { label: "View Gallery", url: "snaliens-gallery.html"},
-        //   { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-        //   { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-        //   { label: "X.com", url: "https://x.com/TheSnaliens"},
-        //   { label: "Website (archive)", url: ""}
-        // ],
-        media: [
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150",
-          "https://via.placeholder.com/150"
-        ]
-      },
-
-  //          {
-  //      title: "YOU RUN INSTA FILTER",
-  //      year: "2021",
-  //      description: "Instagram Face Filter with YOU Run character",
-  //      banner: "./Media/",
-  //      links: [
-  //        { label: "View Gallery", url: "snaliens-gallery.html"},
-  //        { label: "OpenSea", url: "https://opensea.io/collection/snaliens"},
-  //        { label: "Etherscan", url: "https://etherscan.io/address/0xdd572cfae99a134096333d1eed3e614fe88c2e9e"},
-  //        { label: "X.com", url: "https://x.com/TheSnaliens"},
-  //        { label: "Website (archive)", url: ""}
-  //      ],
-  //      media: [
-  //        "https://via.placeholder.com/150",
-  //        "https://via.placeholder.com/150",
-  //        "https://via.placeholder.com/150"
-  //      ]
-  //    }
-
-    ];
-
     const projectList = document.getElementById('project-list');
+    const detailView = document.getElementById('project-detail');
+
+    // Lightbox state
+    const lightbox = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    const lbClose = document.getElementById('lbClose');
+
+    let currentMedia = [];   // image URLs for lightbox
+    let currentIndex = 0;
+
+    // Build menu
     projects.forEach((p, index) => {
       const div = document.createElement('div');
       div.className = 'banner';
@@ -420,61 +351,222 @@
       projectList.appendChild(div);
     });
 
+    function isYouTube(url) {
+      return url.includes("youtube.com") || url.includes("youtu.be");
+    }
+
+    function getYouTubeId(url) {
+      try {
+        if (url.includes("youtu.be")) return url.split("/").pop().split("?")[0];
+        const u = new URL(url);
+        return u.searchParams.get("v");
+      } catch {
+        return null;
+      }
+    }
+
     function openProject(index) {
       const p = projects[index];
+
       document.getElementById('project-list').style.display = 'none';
-      document.getElementById('project-detail').style.display = 'flex';
+      detailView.style.display = 'flex';
 
       document.getElementById('detail-img').src = p.banner;
       document.getElementById('detail-title').textContent = p.title;
-      document.getElementById('detail-year').textContent = p.year;
-      document.getElementById('detail-desc').textContent = p.description;
+      document.getElementById('detail-year').textContent = p.year || "";
+      document.getElementById('detail-desc').textContent = p.description || "";
 
+      // Links
       const linksContainer = document.getElementById('detail-links');
       linksContainer.innerHTML = '';
-      p.links.forEach(link => {
+      (p.links || []).forEach(link => {
+        if (!link.url) return;
         const a = document.createElement('a');
         a.href = link.url;
         a.textContent = link.label;
-        a.style.display = 'block';
-        a.style.marginTop = '0.5rem';
         a.target = '_blank';
+        a.rel = 'noopener noreferrer';
         linksContainer.appendChild(a);
       });
 
+      // MEDIA
       const mediaContainer = document.getElementById('detail-media');
       mediaContainer.innerHTML = '';
-      p.media.forEach(url => {
-  let element;
 
-  if (url.includes("youtube.com") || url.includes("youtu.be")) {
-    // Extrahiere die Video-ID
-    const videoId = url.includes("youtu.be")
-      ? url.split("/").pop()
-      : new URL(url).searchParams.get("v");
+      const items = (p.media || []).filter(Boolean);
 
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+      // IMPORTANT: lightbox list (only images, no youtube)
+      currentMedia = items.filter(u => !isYouTube(u));
+      currentIndex = 0;
 
-    element = document.createElement("iframe");
-    element.src = embedUrl;
-    element.width = "100%";
-    element.height = "200";
-    element.frameBorder = "0";
-    element.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-    element.allowFullscreen = true;
-  } else {
-    element = document.createElement("img");
-    element.src = url;
-  }
+      // For justified layout
+      const mediaItems = []; // { tile, aspect }
 
-  mediaContainer.appendChild(element);
-});
+      function createYouTubeTile(url) {
+        const id = getYouTubeId(url);
+        if (!id) return;
+
+        const tile = document.createElement('div');
+        tile.className = 'media-tile';
+
+        const img = document.createElement('img');
+        img.className = 'yt-thumb';
+        img.src = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+        img.alt = 'YouTube Video';
+
+        const play = document.createElement('div');
+        play.className = 'yt-play';
+
+        // Click -> replace with iframe (inline)
+        tile.addEventListener('click', () => {
+          tile.innerHTML = '';
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+          iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+          iframe.allowFullscreen = true;
+          tile.appendChild(iframe);
+        }, { once: true });
+
+        tile.appendChild(img);
+        tile.appendChild(play);
+
+        mediaItems.push({ tile, aspect: 16/9 });
+        mediaContainer.appendChild(tile);
+      }
+
+      function createImageTile(url) {
+        const tile = document.createElement('div');
+        tile.className = 'media-tile';
+
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Media';
+        img.loading = 'lazy';
+
+        tile.appendChild(img);
+        mediaContainer.appendChild(tile);
+
+        // CLICK ON TILE -> Lightbox
+        tile.addEventListener('click', () => {
+          const idx = currentMedia.indexOf(url);
+          if (idx >= 0) openLightbox(idx);
+        });
+
+        img.addEventListener('load', () => {
+          const aspect = (img.naturalWidth && img.naturalHeight)
+            ? (img.naturalWidth / img.naturalHeight)
+            : (4/3);
+          mediaItems.push({ tile, aspect });
+          layoutJustifiedRows();
+        });
+
+        img.addEventListener('error', () => {
+          mediaItems.push({ tile, aspect: 4/3 });
+          layoutJustifiedRows();
+        });
+      }
+
+      items.forEach(url => {
+        if (isYouTube(url)) createYouTubeTile(url);
+        else createImageTile(url);
+      });
+
+      function layoutJustifiedRows() {
+        const gap = parseFloat(getComputedStyle(mediaContainer).gap) || 14;
+        const H = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--media-row-height')) || 180;
+        const W = mediaContainer.clientWidth;
+
+        const list = mediaItems.slice();
+
+        let row = [];
+        let rowAspectSum = 0;
+
+        function flushRow(isLast) {
+          if (!row.length) return;
+          const gapsTotal = gap * (row.length - 1);
+          const targetW = W - gapsTotal;
+
+          let rowH = targetW / rowAspectSum;
+          if (isLast) rowH = Math.min(rowH, H);
+
+          row.forEach(({ tile, aspect }) => {
+            tile.style.height = `${rowH}px`;
+            tile.style.width = `${rowH * aspect}px`;
+          });
+
+          row = [];
+          rowAspectSum = 0;
+        }
+
+        for (const item of list) {
+          row.push(item);
+          rowAspectSum += item.aspect;
+
+          const gapsTotal = gap * (row.length - 1);
+          const approxW = H * rowAspectSum + gapsTotal;
+
+          if (approxW >= W) flushRow(false);
+        }
+        flushRow(true);
+      }
+
+      layoutJustifiedRows();
+
+      window.onresize = () => layoutJustifiedRows();
     }
 
     function goBack() {
-      document.getElementById('project-detail').style.display = 'none';
+      detailView.style.display = 'none';
       document.getElementById('project-list').style.display = 'grid';
+      closeLightbox();
     }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lbImage.src = currentMedia[currentIndex];
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      updateLbButtons();
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lbImage.src = "";
+      document.body.style.overflow = '';
+    }
+
+    function updateLbButtons() {
+      const show = currentMedia.length > 1;
+      lbPrev.style.display = show ? 'grid' : 'none';
+      lbNext.style.display = show ? 'grid' : 'none';
+    }
+
+    function prevImage() {
+      if (!currentMedia.length) return;
+      currentIndex = (currentIndex - 1 + currentMedia.length) % currentMedia.length;
+      lbImage.src = currentMedia[currentIndex];
+    }
+
+    function nextImage() {
+      if (!currentMedia.length) return;
+      currentIndex = (currentIndex + 1) % currentMedia.length;
+      lbImage.src = currentMedia[currentIndex];
+    }
+
+    lbPrev.addEventListener('click', prevImage);
+    lbNext.addEventListener('click', nextImage);
+    lbClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'ArrowRight') nextImage();
+    });
   </script>
 </body>
 </html>
