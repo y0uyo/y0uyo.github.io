@@ -1,6 +1,6 @@
     const projects = [
       {
-        title: "YOU Run test",
+        title: "YOU Run",
         year: "2019",
         description: "An endless runner game. Started development at age 14 and released it on the Google Play store in 2020 when I was 15, still working on it sometimes when I feel like it. I still think it has potential.",
         banner: "./Media/yr/banner4.png",
