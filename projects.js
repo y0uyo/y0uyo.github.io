@@ -207,7 +207,7 @@
       {
         title: "CAR REPAIR",
         year: "ongoing",
-        description: "fixing my car",
+        description: "fixing my car: replaced alternator, replace negative battery connector, added new carpets, replaced gearknob and gaiter, replaced brakelight switch stopper, installed new rear lights. missing: fix body and repaint left rear quarter, install new rims, fix right brakelight, fix car antenna, fix armrest hinge, fix seats, fix dents / hail damage, prevent/remove rust, repaint front bumper, repaint mirrors, repaint spoiler, adjust handbrake, paint brake calipers, replace dashboard and interieur lights, replace all filters, do an oil change, replace all fluids, restore plastics, polish car, make car faster, lower car, get new exhaust trim, polish fog lights",
         banner: "./Media/others/car.gif",
         // links: [
         //   { label: "View Gallery", url: "snaliens-gallery.html"},
