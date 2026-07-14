@@ -24,7 +24,10 @@
     }
     .gallery img {
       width: 100%;
+      aspect-ratio: 1 / 1;
       display: block;
+      content-visibility: auto;
+      contain-intrinsic-size: 150px 150px;
     }
   </style>
 </head>
@@ -50,6 +53,7 @@
       for (let i = loaded + 1; i <= Math.min(loaded + batchSize, total); i++) {
         const img = document.createElement('img');
         img.loading = 'lazy';
+        img.decoding = 'async';
         img.src = `${baseURL}${i}.webp`;
         img.alt = `NFT ${i}`;
         fragment.appendChild(img);
